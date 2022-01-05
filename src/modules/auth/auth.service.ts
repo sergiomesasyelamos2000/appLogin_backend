@@ -1,14 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'shared/interface/jwt-payload.model';
-import { UsersEntity } from 'src/modules/users/users.entity';
-import { UsersService } from 'src/modules/users/users.service';
+import { UserEntity } from 'src/modules/users/user.entity';
+import { UserService } from 'src/modules/users/user.service';
 import { buildFindOneOptions } from 'src/utilities/Utils';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly usersService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -23,7 +23,7 @@ export class AuthService {
   }
 
   async generateAccessToken(email: string) {
-    const user: UsersEntity = await this.usersService.findByPropertie(
+    const user: UserEntity = await this.usersService.findByPropertie(
       buildFindOneOptions(`email:${email}`),
     );
     const jwtPayload: JwtPayload = { userId: user.id };

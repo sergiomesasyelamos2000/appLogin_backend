@@ -29,8 +29,8 @@ import { ControllerAbstract } from 'src/abstracts/abstract.controller';
 import { ResponseBuilderService } from 'src/utilities/services/response-builder.service';
 import { buildFindOneOptions, decryptPassword } from 'src/utilities/Utils';
   import { FindOneOptions } from 'typeorm';
-import { UsersEntity } from './users.entity';
-import { UsersService } from './users.service';
+import { UserEntity } from './user.entity';
+import { UserService } from './user.service';
   
   @ApiHeader({
     name: 'Authorization',
@@ -38,10 +38,10 @@ import { UsersService } from './users.service';
   })
   @ApiTags('user')
   @Controller(ApiUrls.API_URL_USER)
-  export class UserController extends ControllerAbstract<UsersEntity> {
+  export class UserController extends ControllerAbstract<UserEntity> {
     lang = 'es';
     constructor(
-      private readonly userService: UsersService,
+      private readonly userService: UserService,
       private readonly responseBuilderService: ResponseBuilderService
     ) {
       super();
@@ -51,7 +51,7 @@ import { UsersService } from './users.service';
     @ApiOkResponse({
       status: 200,
       description: 'Get all Users was successfully completed',
-      type: [UsersEntity],
+      type: [UserEntity],
     })
     @ApiForbiddenResponse({
       status: 403,
@@ -63,7 +63,7 @@ import { UsersService } from './users.service';
     })
     @UseGuards(AuthGuard('jwt'))
     @Get()
-    public findAll(@Headers() headers, @Res() response): Promise<UsersEntity[]> {
+    public findAll(@Headers() headers, @Res() response): Promise<UserEntity[]> {
       return this.userService
         .findAll()
         .then((users) => {
@@ -87,7 +87,7 @@ import { UsersService } from './users.service';
     @ApiOkResponse({
       status: 200,
       description: 'Get user by property was successfully completed',
-      type: UsersEntity,
+      type: UserEntity,
     })
     @ApiForbiddenResponse({
       status: 403,
@@ -112,7 +112,7 @@ import { UsersService } from './users.service';
   
       @Param('propertie') propertie: string,
       @Res() response,
-    ): Promise<UsersEntity> {
+    ): Promise<UserEntity> {
       const propertieObject: FindOneOptions = buildFindOneOptions(propertie);
       return this.userService
         .findByPropertie(propertieObject)
@@ -131,7 +131,7 @@ import { UsersService } from './users.service';
     @ApiOkResponse({
       status: 200,
       description: 'Create user was successfully completed',
-      type: UsersEntity,
+      type: UserEntity,
     })
     @ApiForbiddenResponse({
       status: 403,
@@ -152,7 +152,7 @@ import { UsersService } from './users.service';
       @Headers() headers,
       @Body() body: CreateUserDto,
       @Res() response,
-    ): Promise<UsersEntity> {
+    ): Promise<UserEntity> {
       body.password = decryptPassword(body.password);
       return this.responseBuilderService.buildPromiseResponse(
         this.userService.create(body),
@@ -189,7 +189,7 @@ import { UsersService } from './users.service';
       @Headers() headers,
       @Param('id') userId: number,
       @Res() response,
-    ): Promise<UsersEntity> {
+    ): Promise<UserEntity> {
       return this.responseBuilderService.buildPromiseResponse(
         this.userService.delete(userId),
         response,
@@ -203,7 +203,7 @@ import { UsersService } from './users.service';
     @ApiOkResponse({
       status: 200,
       description: 'Update user was successfully completed',
-      type: UsersEntity,
+      type: UserEntity,
     })
     @ApiForbiddenResponse({
       status: 403,
@@ -232,7 +232,7 @@ import { UsersService } from './users.service';
       @Param('id') id: number,
       @Body() body: UpdateUserDto,
       @Res() response,
-    ): Promise<UsersEntity> {
+    ): Promise<UserEntity> {
       const propertieObject: FindOneOptions = buildFindOneOptions(`${id}`);
       if (body?.password) {
         body.password = decryptPassword(body?.password);

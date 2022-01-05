@@ -5,7 +5,7 @@ import { crypt } from 'src/utilities/Utils';
 import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class UsersEntity implements User {
+export class UserEntity implements User {
   @ApiProperty({ example: '1234' })
   @PrimaryGeneratedColumn()
   id: number;
